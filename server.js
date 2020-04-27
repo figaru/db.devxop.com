@@ -55,6 +55,7 @@ mongoose.Promise = global.Promise;
 dbConfig.url = process.env['DATABASE_URL'];
 
 
+
 // Connecting to the database
 mongoose.connect(dbConfig.url, dbConfig.options).then(() => {
     MongoHelper.MONGO_CONNECTED();
