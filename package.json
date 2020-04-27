@@ -1,0 +1,32 @@
+{
+  "name": "api.devxop.com",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Abrantes",
+  "license": "ISC",
+  "dependencies": {
+    "@tozd/random-id": "^1.0.0",
+    "body-parser": "^1.19.0",
+    "compressing": "^1.5.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.6",
+    "express-jsonschema": "^1.1.6",
+    "fs": "0.0.1-security",
+    "get-pixels": "^3.3.2",
+    "gif-encoder": "^0.7.2",
+    "gm": "^1.23.1",
+    "jimp": "^0.9.6",
+    "lodash": "^4.17.15",
+    "mime-types": "^2.1.26",
+    "mongoose": "^5.9.6",
+    "morgan": "^1.10.0",
+    "video-thumbnail-generator": "^1.1.3",
+    "ws": "^7.2.3"
+  }
+}
