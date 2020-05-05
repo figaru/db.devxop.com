@@ -1,3 +1,7 @@
+const SHA256 = require("./SHA256");
+
+const bcrypt = require("bcrypt");
+
 // Given a 'password' from the client, extract the string that we should
 // bcrypt. 'password' can be one of:
 //  - String (the plaintext password)
@@ -44,30 +48,39 @@ const getRoundsFromBcryptHash = hash => {
 // properties `digest` and `algorithm` (in which case we bcrypt
 // `password.digest`).
 //
-const _checkPassword = function (user, password) {
+const _checkPassword = async function (user, password) {
     var result = {
-        userId: user._id
+        userId: user._id,
+        valid: false
     };
 
+    
     const formattedPassword = SHA256(password);
     const hash = user.services.password.bcrypt;
     const hashRounds = getRoundsFromBcryptHash(hash);
 
-    if (!bcryptCompare(formattedPassword, hash)) {
+    result.valid = await bcrypt.compare(formattedPassword, hash);/* .then((result)=>{
+        console.log(result);
+    }); */
+
+   /*  if (!bcrypt.compare(formattedPassword, hash)) {
         //result.error = handleError("Incorrect password", false);
         result.error = "incorrect password";
-    } else if (hash && Accounts._bcryptRounds() != hashRounds) {
+    } else if (hash != hashRounds) {
         // The password checks out, but the user's bcrypt hash needs to be updated.
 
-        /* Meteor.defer(() => {
+        Meteor.defer(() => {
           Meteor.users.update({ _id: user._id }, {
             $set: {
               'services.password.bcrypt':
                 bcryptHash(formattedPassword, Accounts._bcryptRounds())
             }
           });
-        }); */
-    }
+        });
+        result.valid = true;
+    } */
 
     return result;
 };
+
+module.exports = _checkPassword;

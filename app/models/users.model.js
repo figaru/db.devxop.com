@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const UsersSchema = mongoose.Schema({
-    /* _id: {type: String, required: true, unique: true} */
+    _id: {type: String},
+    services: {type: Object},
+    emails: {type: Array},
+    profile: {type: Object}
 }, {
     timestamps: true,
     strict: false,

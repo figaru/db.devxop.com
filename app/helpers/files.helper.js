@@ -85,3 +85,31 @@ exports.saveImageFile = (
             cb(err)
         });
 }
+
+
+exports.getFileDownloadObject = (file) =>{
+
+    let data = {
+        url: "",
+        file_id: file._id,
+        file_ext: ""
+    }
+
+    let type = file.file.mimetype.substring(0, 3);
+    switch (type) {
+        case "vid":
+            data.url = "/files/" + file.user_id + "/" + file._id + "/video." + file.extension;
+            data.file_ext = "." + file.extension; //eg. .mp4
+            break;
+        case "ima":
+            data.url = "/files/" + file.user_id + "/" + file._id + "/main." + file.extension;
+            data.file_ext = ".jpeg"; //eg. .mp4
+            break;
+        
+        default:
+            break;
+    }
+    
+
+    return data;
+}
