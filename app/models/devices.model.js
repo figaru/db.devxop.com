@@ -5,7 +5,11 @@ const DevicesSchema = mongoose.Schema({
     device_id: {type: String},
     authorization_code: {type: String},
     published_view: {type: String},
-    views: {type: Object}
+    views: {type: Object},
+    socket_id: {type: String},
+    ping_stamp: {type: Number},
+    startup_stamp: {type: Number},
+    v_id: {type: Number}
 }, {
     timestamps: true,
     strict: false,

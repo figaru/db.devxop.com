@@ -4,6 +4,10 @@ const ThumbnailGenerator = require('video-thumbnail-generator').default;
 const { randomId } = require('@tozd/random-id');
 const mime = require('mime-types');
 const fs = require('fs');
+
+const util = require('util');
+const execute = util.promisify(require('child_process').exec);
+
 const exec = require('child_process').exec;
 
 const FileHelper = require("../helpers/files.helper");
@@ -12,6 +16,60 @@ const GifGenerator = require("./gif-generator");
 
 
 const Jimp = require('jimp');
+
+
+const Files = require('../models/files.model.js');
+const Jobs = require('../models/jobs.model.js');
+
+const RandomId = require("../utils/random.utils");
+
+exports.videoMerger = async (req, res) => {
+
+    //console.log(process.cwd());
+
+    let files = req.data.files;
+    let title = req.data.title;
+    let userId = req.data.user_id;
+
+    console.log(files);
+    console.log(title);
+
+    if(!title || !files){
+        res.status(500).send({message: "Could not create merger task"});
+    }
+
+    files = files.split(",");
+
+    let obj = {
+        _id: RandomId.id(),
+        action: "video_merger",
+        start: false,
+        end: false,
+        user_id: userId,
+        title: title,
+        script_based: true,
+        params: {
+            user_id: userId,
+            file_id: RandomId.id(),
+            files: files,
+            title: title
+        }
+
+    }
+
+    const job = new Jobs(obj);
+
+    job.save().then(()=>{
+        console.log("Merger job has been created.");
+        res.send({message: "Job has been created"});
+    }).catch(()=>{
+        res.status(500).send({message: "Could not create merger task"});
+    })
+
+
+};
+
+
 
 // Create and Save a new file
 exports.create = async (req, res) => {
@@ -54,10 +112,16 @@ exports.create = async (req, res) => {
         obj["is_image"] = isImage;
         obj["extension"] = fileExtension;
         obj["title"] = file.name;
-        const fileObj = new File(obj);
 
+        if (isImage)
+            obj["extension"] = "jpeg";
+
+        const fileObj = new File(obj);
+        const dir = FileHelper.getLocalDir(id, userId);
         if (isImage) {
-            FileHelper.saveImageFile(file.data, userId, id, function (err) {
+
+
+            FileHelper.saveImageFile(file.data, dir, function (err) {
                 if (err) {
                     //console.log(err);
                     return res.status(500).send({
@@ -80,20 +144,21 @@ exports.create = async (req, res) => {
             });
 
         } else if (isVideo) {
-            file.mv('./storage/users/' + userId + '/' + id + '/video.' + fileExtension, () => {
+            
+            file.mv(dir + 'video.' + fileExtension, () => {
                 console.log("saved file!");
                 const tg = new ThumbnailGenerator({
-                    sourcePath: './storage/users/' + userId + '/' + id + '/video.' + fileExtension,
-                    thumbnailPath: './storage/users/' + userId + '/' + id + '/'
+                    sourcePath: dir + 'video.' + fileExtension,
+                    thumbnailPath: dir
                     // tmpDir: './storage/users/' + userId + '/' + id + '/tmp/' //only required if you can't write to /tmp/ and you need to generate gifs
                 });
 
                 tg.generate({
                     size: "480x270"
                 }).then((result) => {
-                    const path = './storage/users/' + userId + '/' + id + '/';
+                    const path = dir;
 
-                    FileHelper.saveImageFile(path + result[0], userId, id, function (err) {
+                    FileHelper.saveImageFile(path + result[0], dir, function (err) {
                         if (err) {
                             console.log(err);
                             return res.status(500).send({

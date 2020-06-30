@@ -5,6 +5,7 @@ const FilesSchema = mongoose.Schema({
     file: {type: Object},
     extension: {type: String},
     user_id: {type: String},
+    is_collection: {type: Boolean}
 
 }, {
     timestamps: true,

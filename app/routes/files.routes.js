@@ -20,4 +20,9 @@ module.exports = (app) => {
     // Delete a file with fileId
     app.delete('/files', validate({data: FilesSchema.delete}), files.delete);
 
+
+
+    // Create a new file
+    app.post('/files/video/merger', files.videoMerger);
+
 }
