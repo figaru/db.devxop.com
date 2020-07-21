@@ -1,6 +1,6 @@
 module.exports = {
     _connected: false,
-    url: '',
+    url: 'mongodb://localhost:5000/meteor',
     options: {
         useNewUrlParser: true,
         useUnifiedTopology: true,

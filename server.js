@@ -55,8 +55,7 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.Promise = global.Promise;
 
 // get an environment variable for mongodb
-dbConfig.url = process.env['DATABASE_URL'];
-
+dbConfig.url = "mongodb://localhost:3001/meteor";//'mongodb://figaru:danimani13@localhost:27017/devxop?authSource=devxop'; //'mongodb://localhost:3001/meteor';/* process.env['DATABASE_URL']; */
 
 
 // Connecting to the database
@@ -73,7 +72,7 @@ mongoose.connect(dbConfig.url, dbConfig.options).then(() => {
     process.exit();
 });
 
-const port = process.env.PORT || 80;
+const port = 5000//process.env.PORT || 80;
 const server = require('http').createServer(app);
 const socket = require("./socket")(server);
 const scheduler = require("./app/processes/scheduler");
