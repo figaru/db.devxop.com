@@ -9,10 +9,13 @@ const _checkPassword = require("./app/accounts/password");
 
 module.exports = (server) => {
     const io = require('socket.io')(server);
+
+    console.log(io);
     io.on('connection', (client) => {
+
         //process.stdout.write("Socket Clients: " + io.engine.clientsCount + " \r");
-        //console.log("Socket connection");
-        //console.log("Client Id: " + client.id);
+        console.log("Socket connection");
+        console.log("Client Id: " + client.id);
         client.on('disconnect', () => {
             //process.stdout.write("Socket Clients: " + io.engine.clientsCount + " \r");
             //console.log("Socket client disconnected");
@@ -197,10 +200,10 @@ module.exports = (server) => {
 
         client.on("device.request.login", async (params) => {
             params = JSON.parse(params);
-
             //first validate login
-            Users.findOne({ "emails.$.address": { $in: [params.username] } }).then((user) => {
+            Users.findOne({ "emails.address": params.user }).then((user) => {
                 if (user) {
+                    
                     _checkPassword(user, params.pass).then((result) => {
                         if (result.valid) {
                             Devices.findOne({ "device_id": params.device_id }).then(device => {

@@ -64,24 +64,31 @@ exports.saveImageFile = (
     Jimp.read(data)
         .then(image => {
             //SAVE MAIN IMAGE 1080p
+            let EXTENSION = ""
             image
                 .scaleToFit(1920, 1080) // resize
                 .quality(100) // set JPEG quality
 
-            image.writeAsync(dir + "main.jpeg").then(() => {
+            if(image._originalMime.includes("png")){
+                EXTENSION = ".png";
+            }else{
+                EXTENSION = ".jpeg";
+            }
+
+            image.writeAsync(dir + 'main' + EXTENSION).then(() => {
                 //SAVE THUMB IMAGE 360p
                 image
                     .scaleToFit(480, 270) // resize 1920p / 4 = 480px
                     .quality(70) // set JPEG quality
 
-                image.writeAsync(dir + 'thumb.jpeg').then(() => {
+                image.writeAsync(dir + 'thumb' + EXTENSION).then(() => {
                     //SAVE PRELOAD IMAGE 240p blurred
                     image
                         .scaleToFit(384, 216) // resize resize 1920p / 5 = 384px
                         .quality(50) // set JPEG quality
                         .blur(8)
 
-                    image.writeAsync(dir + 'preload.jpeg').then(cb(null));
+                    image.writeAsync(dir + 'preload' + EXTENSION).then(cb(null));
                 });
             })
 

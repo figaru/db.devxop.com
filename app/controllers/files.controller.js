@@ -113,8 +113,14 @@ exports.create = async (req, res) => {
         obj["extension"] = fileExtension;
         obj["title"] = file.name;
 
-        if (isImage)
-            obj["extension"] = "jpeg";
+        if (isImage){
+            if(file.mimetype.includes("png")){
+                obj["extension"] = "png";
+            }else{
+                obj["extension"] = "jpeg";
+            }
+        }
+            
 
         const fileObj = new File(obj);
         const dir = FileHelper.getLocalDir(id, userId);
