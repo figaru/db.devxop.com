@@ -12,7 +12,7 @@
     "@ffmpeg-installer/ffmpeg": "^1.0.13",
     "@ffprobe-installer/ffprobe": "^1.0.12",
     "@tozd/random-id": "^1.0.0",
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "compressing": "^1.5.1",
     "cors": "^2.8.5",
